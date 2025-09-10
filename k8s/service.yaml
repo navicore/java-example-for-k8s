@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: probe-demo-service
+  labels:
+    app: probe-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: management
+    protocol: TCP
+  selector:
+    app: probe-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: probe-demo-nodeport
+  labels:
+    app: probe-demo
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+    nodePort: 30080
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: management
+    nodePort: 30081
+    protocol: TCP
+  selector:
+    app: probe-demo

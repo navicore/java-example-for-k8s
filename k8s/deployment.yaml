@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: probe-demo
+  labels:
+    app: probe-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: probe-demo
+  template:
+    metadata:
+      labels:
+        app: probe-demo
+      annotations:
+        # Prometheus scraping configuration for navipod
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8081"
+        prometheus.io/scheme: "http"
+        # Additional metadata for navipod metrics discovery
+        navipod.io/metrics-enabled: "true"
+        navipod.io/metrics-port: "8081"
+        navipod.io/metrics-path: "/actuator/prometheus"
+    spec:
+      containers:
+      - name: probe-demo
+        image: probe-demo:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: management
+          containerPort: 8081
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "kubernetes"
+        - name: JAVA_OPTS
+          value: "-Xmx512m -Xms256m"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        # Startup Probe - Ensures container starts up properly
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 6
+          successThreshold: 1
+        # Liveness Probe - Determines if container should be restarted
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        # Readiness Probe - Determines if container should receive traffic
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: management
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1

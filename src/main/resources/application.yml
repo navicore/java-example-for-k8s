@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+info:
+  app:
+    name: "Probe Demo Service"
+    description: "Example service with Kubernetes probes and metrics"
+    version: "1.0.0"
+
+logging:
+  level:
+    com.example.probedemo: INFO
+    org.springframework.boot.actuator: INFO
