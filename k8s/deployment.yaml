@@ -14,15 +14,10 @@ spec:
       labels:
         app: probe-demo
       annotations:
-        # Prometheus scraping configuration for navipod
+        # Standard Prometheus scraping configuration
         prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8081"
-        prometheus.io/scheme: "http"
-        # Additional metadata for navipod metrics discovery
-        navipod.io/metrics-enabled: "true"
-        navipod.io/metrics-port: "8081"
-        navipod.io/metrics-path: "/actuator/prometheus"
     spec:
       containers:
       - name: probe-demo
