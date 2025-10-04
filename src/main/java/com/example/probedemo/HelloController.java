@@ -132,12 +132,20 @@ public class HelloController {
     @GetMapping("/simulate-error")
     public String simulateError() {
         errorCounter.increment();
-        
+
         if (ThreadLocalRandom.current().nextBoolean()) {
             throw new RuntimeException("Simulated error for testing!");
         }
-        
+
         return "Error simulation - this time it worked!";
+    }
+
+    @GetMapping("/debug-test")
+    public String debugTest() {
+        String message = "Hello from debugger test!";
+        String name = "Claude";
+        int count = 42;
+        return message + " " + name + " " + count;
     }
 
     // Gauge callback methods
