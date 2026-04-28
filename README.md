@@ -1,3 +1,8 @@
+<!-- ghmig:moved -->
+> **This repository has moved to [https://git.navicore.tech/navicore/java-example-for-k8s](https://git.navicore.tech/navicore/java-example-for-k8s).**
+>
+> The GitHub copy is archived and no longer maintained.
+
 # Kubernetes Probes Demo - Java Spring Boot
 
 A comprehensive example Spring Boot application designed to demonstrate all three Kubernetes probe types (Startup, Liveness, Readiness) with metrics and health endpoints.
